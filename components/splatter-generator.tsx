@@ -398,26 +398,35 @@ export function SplatterGenerator({ onSave }: SplatterGeneratorProps) {
                     </div>
 
                     <div className="flex flex-wrap gap-2">
-                      {colors.map((color, index) => (
-                        <div key={index} className="relative group">
-                          <Input
-                            type="color"
-                            value={color}
-                            onChange={(e) => updateColor(index, e.target.value)}
-                            className="w-10 h-10 p-1 rounded-md cursor-pointer"
-                            style={{ backgroundColor: color }}
-                          />
-                          {colors.length > 1 && (
-                            <button
-                              onClick={() => removeColor(index)}
-                              className="absolute -top-2 -right-2 bg-background rounded-full w-5 h-5 flex items-center justify-center border shadow-sm opacity-0 group-hover:opacity-100 transition-opacity"
-                            >
-                              ✕
-                            </button>
-                          )}
-                        </div>
-                      ))}
-                    </div>
+  {colors.map((color, index) => (
+    <div key={index} className="relative group">
+      <div 
+        className="w-10 h-10 rounded-full cursor-pointer border-2 border-muted-foreground/20"
+        style={{ backgroundColor: color }}
+        onClick={() => {
+          const colorInput = document.getElementById(`color-input-${index}`) as HTMLInputElement
+          colorInput.click()
+        }}
+      >
+        <Input
+          id={`color-input-${index}`}
+          type="color"
+          value={color}
+          onChange={(e) => updateColor(index, e.target.value)}
+          className="absolute opacity-0 w-0 h-0"
+        />
+      </div>
+      {colors.length > 1 && (
+        <button
+          onClick={() => removeColor(index)}
+          className="absolute -top-2 -right-2 bg-background rounded-full w-5 h-5 flex items-center justify-center border shadow-sm opacity-0 group-hover:opacity-100 transition-opacity"
+        >
+          ✕
+        </button>
+      )}
+    </div>
+  ))}
+</div>
                   </div>
 
                   <div className="space-y-2">
