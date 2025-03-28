@@ -11,13 +11,13 @@
     --primary: 265 89% 60%;
     --primary-foreground: 0 0% 98%;
 
-    /* Secondary color - Teal */
-    --secondary: 180 100% 40%;
+    /* Secondary color - Deep indigo (replacing teal) */
+    --secondary: 250 95% 65%;
     --secondary-foreground: 0 0% 98%;
 
-    /* Accent color - Coral */
-    --accent: 16 100% 65%;
-    --accent-foreground: 240 5.9% 10%;
+    /* Accent color - Vibrant pink */
+    --accent: 330 95% 65%;
+    --accent-foreground: 0 0% 98%;
 
     --muted: 240 4.8% 95.9%;
     --muted-foreground: 240 3.8% 46.1%;
@@ -47,12 +47,12 @@
     --primary: 265 89% 70%;
     --primary-foreground: 0 0% 98%;
 
-    /* Secondary color in dark mode - Brighter teal */
-    --secondary: 180 100% 50%;
-    --secondary-foreground: 240 5.9% 10%;
+    /* Secondary color in dark mode - Brighter indigo */
+    --secondary: 250 95% 75%;
+    --secondary-foreground: 0 0% 98%;
 
-    /* Accent color in dark mode - Brighter coral */
-    --accent: 16 100% 70%;
+    /* Accent color in dark mode - Brighter pink */
+    --accent: 330 95% 75%;
     --accent-foreground: 0 0% 98%;
 
     --muted: 240 3.7% 15.9%;
@@ -99,6 +99,16 @@
 .animate-gradient {
   background-size: 200% 200%;
   animation: gradient-shift 8s ease infinite;
+}
+
+/* Frosted glass effect */
+.frosted-glass {
+  backdrop-filter: blur(8px);
+  background-color: rgba(255, 255, 255, 0.7);
+}
+
+.dark .frosted-glass {
+  background-color: rgba(15, 23, 42, 0.7);
 }
 
 /* Custom scrollbar */

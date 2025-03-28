@@ -1,11 +1,27 @@
-import { ReactNode } from "react"
+import type React from "react"
 import {
-  Palette, Laptop, Smartphone, Briefcase, Code, ShoppingBag, 
-  Stethoscope, Dumbbell, Film, Share2, BookOpen, Utensils, 
-  Plane, Car, Building, Heart, Music, Landmark
+  Laptop,
+  Smartphone,
+  ShoppingBag,
+  Briefcase,
+  Film,
+  Dumbbell,
+  Stethoscope,
+  Code,
+  Palette,
+  Share2,
+  BookOpen,
+  Utensils,
+  Plane,
+  Car,
+  Building,
+  Music,
+  Heart,
+  Landmark,
 } from "lucide-react"
 
-export interface TemplateColor {
+// Template data types
+interface TemplateColor {
   name: string
   value: string
 }
@@ -22,39 +38,12 @@ export interface Template {
 export interface FilterCategory {
   id: string
   name: string
-  icon: ReactNode
+  icon: React.ReactNode
 }
 
-export const categories: FilterCategory[] = [
-  { id: "all", name: "All Categories", icon: <Palette className="h-4 w-4" /> },
-  { id: "saas", name: "SaaS", icon: <Laptop className="h-4 w-4" /> },
-  { id: "ui", name: "UI Design", icon: <Smartphone className="h-4 w-4" /> },
-  { id: "brand", name: "Brand Design", icon: <Briefcase className="h-4 w-4" /> },
-  { id: "graphic", name: "Graphic Design", icon: <Palette className="h-4 w-4" /> },
-]
-
-export const industries: FilterCategory[] = [
-  { id: "all", name: "All Industries", icon: <Briefcase className="h-4 w-4" /> },
-  { id: "tech", name: "Technology", icon: <Code className="h-4 w-4" /> },
-  { id: "retail", name: "Retail", icon: <ShoppingBag className="h-4 w-4" /> },
-  { id: "healthcare", name: "Healthcare", icon: <Stethoscope className="h-4 w-4" /> },
-  { id: "sports", name: "Sports", icon: <Dumbbell className="h-4 w-4" /> },
-  { id: "entertainment", name: "Entertainment", icon: <Film className="h-4 w-4" /> },
-  { id: "creative", name: "Creative", icon: <Palette className="h-4 w-4" /> },
-  { id: "marketing", name: "Marketing", icon: <Share2 className="h-4 w-4" /> },
-  { id: "finance", name: "Finance", icon: <Landmark className="h-4 w-4" /> },
-  { id: "education", name: "Education", icon: <BookOpen className="h-4 w-4" /> },
-  { id: "food", name: "Food & Beverage", icon: <Utensils className="h-4 w-4" /> },
-  { id: "travel", name: "Travel", icon: <Plane className="h-4 w-4" /> },
-  { id: "automotive", name: "Automotive", icon: <Car className="h-4 w-4" /> },
-  { id: "realestate", name: "Real Estate", icon: <Building className="h-4 w-4" /> },
-  { id: "fashion", name: "Fashion", icon: <Heart className="h-4 w-4" /> },
-  { id: "publishing", name: "Publishing", icon: <BookOpen className="h-4 w-4" /> },
-  { id: "events", name: "Events", icon: <Music className="h-4 w-4" /> },
-  { id: "business", name: "Business", icon: <Briefcase className="h-4 w-4" /> },
-]
-
+// Sample template data
 export const sampleTemplates: Template[] = [
+  // SaaS Templates
   {
     id: "saas-1",
     name: "Modern SaaS Dashboard",
@@ -171,7 +160,6 @@ export const sampleTemplates: Template[] = [
   },
   {
     id: "ui-5",
-
     name: "Food Delivery App",
     category: "ui",
     industry: "food",
@@ -428,8 +416,6 @@ export const sampleTemplates: Template[] = [
       { name: "Secondary", value: "#0f766e" },
       { name: "Accent", value: "#b91c1c" },
       { name: "Background", value: "#f8fafc" },
-      { name: "Accent", value: "#b91c1c" },
-      { name: "Background", value: "#f8fafc" },
       { name: "Text", value: "#0f172a" },
     ],
     previewUrl: "/placeholder.svg?height=300&width=400",
@@ -526,5 +512,35 @@ export const sampleTemplates: Template[] = [
     ],
     previewUrl: "/placeholder.svg?height=300&width=400",
   },
+]
+
+// Categories and industries for filtering
+export const categories: FilterCategory[] = [
+  { id: "all", name: "All Categories", icon: <Palette className="h-4 w-4" /> },
+  { id: "saas", name: "SaaS", icon: <Laptop className="h-4 w-4" /> },
+  { id: "ui", name: "UI Design", icon: <Smartphone className="h-4 w-4" /> },
+  { id: "brand", name: "Brand Design", icon: <Briefcase className="h-4 w-4" /> },
+  { id: "graphic", name: "Graphic Design", icon: <Palette className="h-4 w-4" /> },
+]
+
+export const industries: FilterCategory[] = [
+  { id: "all", name: "All Industries", icon: <Briefcase className="h-4 w-4" /> },
+  { id: "tech", name: "Technology", icon: <Code className="h-4 w-4" /> },
+  { id: "retail", name: "Retail", icon: <ShoppingBag className="h-4 w-4" /> },
+  { id: "healthcare", name: "Healthcare", icon: <Stethoscope className="h-4 w-4" /> },
+  { id: "sports", name: "Sports", icon: <Dumbbell className="h-4 w-4" /> },
+  { id: "entertainment", name: "Entertainment", icon: <Film className="h-4 w-4" /> },
+  { id: "creative", name: "Creative", icon: <Palette className="h-4 w-4" /> },
+  { id: "marketing", name: "Marketing", icon: <Share2 className="h-4 w-4" /> },
+  { id: "finance", name: "Finance", icon: <Landmark className="h-4 w-4" /> },
+  { id: "education", name: "Education", icon: <BookOpen className="h-4 w-4" /> },
+  { id: "food", name: "Food & Beverage", icon: <Utensils className="h-4 w-4" /> },
+  { id: "travel", name: "Travel", icon: <Plane className="h-4 w-4" /> },
+  { id: "automotive", name: "Automotive", icon: <Car className="h-4 w-4" /> },
+  { id: "realestate", name: "Real Estate", icon: <Building className="h-4 w-4" /> },
+  { id: "fashion", name: "Fashion", icon: <Heart className="h-4 w-4" /> },
+  { id: "publishing", name: "Publishing", icon: <BookOpen className="h-4 w-4" /> },
+  { id: "events", name: "Events", icon: <Music className="h-4 w-4" /> },
+  { id: "business", name: "Business", icon: <Briefcase className="h-4 w-4" /> },
 ]
 

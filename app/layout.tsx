@@ -14,7 +14,6 @@ const inter = Inter({
 export const metadata = {
   title: "ColorCraft - Design Templates & Color Palette Generator",
   description: "Create beautiful color palettes and design templates for your projects",
-    generator: 'v0.dev'
 }
 
 export default function RootLayout({
@@ -38,6 +37,3 @@ export default function RootLayout({
   )
 }
 
-
-
-import './globals.css'

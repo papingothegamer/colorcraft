@@ -1,4 +1,6 @@
 {
   "/page": "app/page.js",
-  "/templates/page": "app/templates/page.js"
+  "/tools/abstract/page": "app/tools/abstract/page.js",
+  "/templates/page": "app/templates/page.js",
+  "/tools/palette/page": "app/tools/palette/page.js"
 }

@@ -8,9 +8,14 @@ import { SplatterGenerator } from "./splatter-generator"
 import { AbstractGenerator } from "./abstract-generator"
 import { useLocalStorage } from "@/hooks/use-local-storage"
 import type { Palette, GradientConfig, SplatterConfig, AbstractConfig } from "@/types/color-types"
+import { useSearchParams, useRouter } from "next/navigation"
 
 export function ColorGenerator() {
-  const [activeTab, setActiveTab] = useState("palette")
+  const searchParams = useSearchParams()
+  const router = useRouter()
+  const initialTab = searchParams.get("tab") || "palette"
+
+  const [activeTab, setActiveTab] = useState(initialTab)
   const [savedPalettes, setSavedPalettes] = useLocalStorage<Palette[]>("saved-palettes", [])
   const [savedGradients, setSavedGradients] = useLocalStorage<GradientConfig[]>("saved-gradients", [])
   const [savedSplatters, setSavedSplatters] = useLocalStorage<SplatterConfig[]>("saved-splatters", [])
@@ -20,6 +25,12 @@ export function ColorGenerator() {
   useEffect(() => {
     setMounted(true)
   }, [])
+
+  // Update URL when tab changes
+  const handleTabChange = (value: string) => {
+    setActiveTab(value)
+    router.push(`/tools?tab=${value}`, { scroll: false })
+  }
 
   const savePalette = (palette: Palette) => {
     setSavedPalettes((prev) => [palette, ...prev.slice(0, 19)])
@@ -52,7 +63,7 @@ export function ColorGenerator() {
         <p className="text-muted-foreground mt-1">Create beautiful color palettes, gradients, and patterns</p>
       </div>
 
-      <Tabs defaultValue="palette" value={activeTab} onValueChange={setActiveTab}>
+      <Tabs defaultValue={activeTab} value={activeTab} onValueChange={handleTabChange}>
         <div className="flex justify-between items-center mb-6">
           <TabsList className="grid grid-cols-4 w-full max-w-md">
             <TabsTrigger value="palette">Palette</TabsTrigger>

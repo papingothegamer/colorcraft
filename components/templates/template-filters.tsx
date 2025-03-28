@@ -1,9 +1,8 @@
-import React from "react"
+"use client"
+
 import { Button } from "@/components/ui/button"
 import { ScrollArea } from "@/components/ui/scroll-area"
-import { categories, industries, FilterCategory } from "@/components/templates/template-types"
-import Link from "next/link"
-import { ArrowUpRight, Palette } from "lucide-react"
+import { categories, industries, type FilterCategory } from "@/components/templates/template-types"
 
 interface TemplateFiltersProps {
   selectedCategory: string
@@ -18,47 +17,36 @@ export function TemplateFilters({
   selectedIndustry,
   onCategoryChange,
   onIndustryChange,
-  isHomePage
+  isHomePage,
 }: TemplateFiltersProps) {
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       <div>
-        <h3 className="text-lg font-medium mb-3">Categories</h3>
-        <div className="space-y-2">
+        <h3 className="text-base font-medium mb-3">Categories</h3>
+        <div className="space-y-1">
           {categories.map((category: FilterCategory) => (
             <Button
               key={category.id}
-              variant={selectedCategory === category.id ? "default" : "outline"}
-              className="w-full justify-start"
+              variant={selectedCategory === category.id ? "default" : "ghost"}
+              className="w-full justify-start px-2 h-9"
               onClick={() => onCategoryChange(category.id)}
             >
               <span className="mr-2">{category.icon}</span>
               {category.name}
             </Button>
           ))}
-          {!isHomePage && (
-            <Button
-              variant="outline"
-              className="w-full justify-start"
-              onClick={() => onCategoryChange("all")}
-            >
-              <span className="mr-2">
-                <Palette className="h-4 w-4" /></span>
-              All Categories
-            </Button>
-          )}
         </div>
       </div>
 
       <div>
-        <h3 className="text-lg font-medium mb-3">Industries</h3>
-        <ScrollArea className="h-[300px] pr-4">
-          <div className="space-y-2">
+        <h3 className="text-base font-medium mb-3">Industries</h3>
+        <ScrollArea className="h-[400px]">
+          <div className="space-y-1 pr-4">
             {industries.map((industry: FilterCategory) => (
               <Button
                 key={industry.id}
-                variant={selectedIndustry === industry.id ? "default" : "outline"}
-                className="w-full justify-start"
+                variant={selectedIndustry === industry.id ? "default" : "ghost"}
+                className="w-full justify-start px-2 h-9"
                 onClick={() => onIndustryChange(industry.id)}
               >
                 <span className="mr-2">{industry.icon}</span>
@@ -68,15 +56,7 @@ export function TemplateFilters({
           </div>
         </ScrollArea>
       </div>
-
-      {isHomePage && (
-        <Link href="/templates">
-          <Button variant="outline" className="w-full justify-start">
-            <span className="mr-2"><ArrowUpRight className="h-4 w-4" /></span>
-            All Categories
-          </Button>
-        </Link>
-      )}
     </div>
   )
 }
+

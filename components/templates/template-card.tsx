@@ -1,11 +1,22 @@
-import React, { useState } from "react"
-import { Button } from "@/components/ui/button"
+"use client"
+
+import { useState } from "react"
 import { Card, CardContent, CardFooter } from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
-import { RefreshCw, Copy, Share2, Download } from "lucide-react"
+import { RefreshCw, Copy, Download, Share2, Info } from "lucide-react"
 import { toast } from "@/components/ui/use-toast"
-import { Template, categories, industries } from "./template-types"
+import type { Template } from "./template-types"
+import { categories, industries } from "./template-types"
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog"
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 
 interface TemplateCardProps {
   template: Template
@@ -13,8 +24,9 @@ interface TemplateCardProps {
 }
 
 export function TemplateCard({ template, onRandomize }: TemplateCardProps) {
-  const [localTemplate, setLocalTemplate] = useState<Template>(template)
+  const [currentTemplate, setCurrentTemplate] = useState<Template>(template)
 
+  // Copy color to clipboard
   const copyColor = (color: string) => {
     navigator.clipboard.writeText(color)
     toast({
@@ -24,8 +36,9 @@ export function TemplateCard({ template, onRandomize }: TemplateCardProps) {
     })
   }
 
-  const copyAllColors = () => {
-    const colorText = localTemplate.colors.map((c) => `${c.name}: ${c.value}`).join("\n")
+  // Copy all colors to clipboard
+  const copyAllColors = (template: Template) => {
+    const colorText = template.colors.map((c) => `${c.name}: ${c.value}`).join("\n")
     navigator.clipboard.writeText(colorText)
     toast({
       title: "Colors copied!",
@@ -34,11 +47,12 @@ export function TemplateCard({ template, onRandomize }: TemplateCardProps) {
     })
   }
 
-  const exportTemplate = () => {
-    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(localTemplate, null, 2))
+  // Export template as JSON
+  const exportTemplate = (template: Template) => {
+    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(template, null, 2))
     const downloadAnchorNode = document.createElement("a")
     downloadAnchorNode.setAttribute("href", dataStr)
-    downloadAnchorNode.setAttribute("download", `${localTemplate.name.toLowerCase().replace(/\s+/g, "-")}.json`)
+    downloadAnchorNode.setAttribute("download", `${template.name.toLowerCase().replace(/\s+/g, "-")}.json`)
     document.body.appendChild(downloadAnchorNode)
     downloadAnchorNode.click()
     downloadAnchorNode.remove()
@@ -50,13 +64,16 @@ export function TemplateCard({ template, onRandomize }: TemplateCardProps) {
     })
   }
 
-  const shareTemplate = () => {
-    const shareText = `Check out this ${localTemplate.name} color palette on ColorCraft:\n\n${localTemplate.colors.map((c) => `${c.name}: ${c.value}`).join("\n")}`
+  // Share template
+  const shareTemplate = (template: Template) => {
+    const shareText = `Check out this ${template.name} color palette on ColorCraft:\n\n${template.colors
+      .map((c) => `${c.name}: ${c.value}`)
+      .join("\n")}`
 
     if (navigator.share) {
       navigator
         .share({
-          title: `ColorCraft - ${localTemplate.name}`,
+          title: `ColorCraft - ${template.name}`,
           text: shareText,
           url: window.location.href,
         })
@@ -79,78 +96,96 @@ export function TemplateCard({ template, onRandomize }: TemplateCardProps) {
   }
 
   const handleRandomize = () => {
-    const randomizedTemplate = onRandomize(localTemplate)
-    setLocalTemplate(randomizedTemplate)
+    const randomized = onRandomize(currentTemplate)
+    setCurrentTemplate(randomized)
   }
 
+  const categoryName = categories.find((c) => c.id === currentTemplate.category)?.name || "Unknown"
+  const industryName = industries.find((i) => i.id === currentTemplate.industry)?.name || "Unknown"
+
   return (
-    <Card className="w-[350px] h-[420px] overflow-hidden flex flex-col">
+    <Card className="overflow-hidden flex flex-col w-full h-full group hover:shadow-md transition-shadow">
       <div
-        className="h-48 w-full bg-cover bg-center"
-        style={{ backgroundImage: `url(${localTemplate.previewUrl})` }}
-      />
-      <CardContent className="p-4 flex-grow">
-        <div className="flex justify-between items-start">
-          <div>
-            <h3 className="font-semibold text-lg">{localTemplate.name}</h3>
-            <div className="flex gap-2 mt-1">
-              <Badge variant="outline" className="text-xs">
-                {categories.find((c) => c.id === localTemplate.category)?.name}
-              </Badge>
-              <Badge variant="outline" className="text-xs">
-                {industries.find((i) => i.id === localTemplate.industry)?.name}
-              </Badge>
-            </div>
+        className="h-48 w-full bg-cover bg-center group-hover:opacity-95 transition-opacity"
+        style={{ backgroundImage: `url(${currentTemplate.previewUrl})` }}
+      >
+        <div className="relative w-full h-full p-2">
+          <div className="absolute top-2 right-2 flex gap-1">
+            <Badge className="bg-primary/90 hover:bg-primary">{categoryName}</Badge>
+            <Badge variant="outline" className="bg-background/60">
+              {industryName}
+            </Badge>
           </div>
         </div>
+      </div>
+      <CardContent className="p-4 flex-grow flex flex-col">
+        <div>
+          <h3 className="font-semibold text-lg group-hover:text-primary transition-colors line-clamp-1">
+            {currentTemplate.name}
+          </h3>
+        </div>
 
-        <div className="flex mt-4 gap-1">
-          {localTemplate.colors.map((color, index) => (
-            <div
-              key={index}
-              className="w-8 h-8 rounded-full border cursor-pointer transition-transform hover:scale-110"
-              style={{ backgroundColor: color.value }}
-              onClick={() => copyColor(color.value)}
-              title={`${color.name}: ${color.value}`}
-            />
+        <div className="flex mt-3 gap-1 flex-wrap">
+          {currentTemplate.colors.map((color, index) => (
+            <TooltipProvider key={index}>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <div
+                    className="w-8 h-8 rounded-full border cursor-pointer transition-transform hover:scale-110 hover:shadow-sm"
+                    style={{ backgroundColor: color.value }}
+                    onClick={() => copyColor(color.value)}
+                  />
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>
+                    {color.name}: {color.value}
+                  </p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
           ))}
         </div>
       </CardContent>
-      <CardFooter className="p-4 pt-0 flex justify-between">
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={handleRandomize}
-        >
-          <RefreshCw className="h-4 w-4 mr-1" />
-          Randomize
-        </Button>
+      <CardFooter className="p-3 pt-0 flex justify-between border-t mt-2">
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button variant="ghost" size="sm" onClick={handleRandomize}>
+                <RefreshCw className="h-4 w-4" />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>Randomize Colors</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+
         <Dialog>
           <DialogTrigger asChild>
-            <Button size="sm">View Details</Button>
+            <Button variant="default" size="sm" className="gap-1">
+              <Info className="h-4 w-4 mr-1" />
+              Details
+            </Button>
           </DialogTrigger>
           <DialogContent className="sm:max-w-[600px]">
             <DialogHeader>
-              <DialogTitle>{localTemplate.name}</DialogTitle>
+              <DialogTitle>{currentTemplate.name}</DialogTitle>
               <DialogDescription>
-                A template for {industries.find((i) => i.id === localTemplate.industry)?.name} in the{" "}
-                {categories.find((c) => c.id === localTemplate.category)?.name} category.
+                A template for {industries.find((i) => i.id === currentTemplate.industry)?.name} in the{" "}
+                {categories.find((c) => c.id === currentTemplate.category)?.name} category.
               </DialogDescription>
             </DialogHeader>
 
             <div className="grid gap-4 py-4">
               <div
                 className="h-48 w-full bg-cover bg-center rounded-md"
-                style={{ backgroundImage: `url(${localTemplate.previewUrl})` }}
+                style={{ backgroundImage: `url(${currentTemplate.previewUrl})` }}
               />
 
               <div className="grid grid-cols-2 gap-4">
-                {localTemplate.colors.map((color, index) => (
+                {currentTemplate.colors.map((color, index) => (
                   <div key={index} className="flex items-center gap-2">
-                    <div
-                      className="w-8 h-8 rounded-full border"
-                      style={{ backgroundColor: color.value }}
-                    />
+                    <div className="w-8 h-8 rounded-full border" style={{ backgroundColor: color.value }} />
                     <div className="flex-1">
                       <div className="font-medium">{color.name}</div>
                       <div className="text-sm text-muted-foreground font-mono">{color.value}</div>
@@ -168,15 +203,15 @@ export function TemplateCard({ template, onRandomize }: TemplateCardProps) {
                   Randomize Colors
                 </Button>
                 <div className="flex gap-2">
-                  <Button variant="outline" onClick={copyAllColors}>
+                  <Button variant="outline" onClick={() => copyAllColors(currentTemplate)}>
                     <Copy className="h-4 w-4 mr-2" />
                     Copy All
                   </Button>
-                  <Button variant="outline" onClick={exportTemplate}>
+                  <Button variant="outline" onClick={() => exportTemplate(currentTemplate)}>
                     <Download className="h-4 w-4 mr-2" />
                     Export
                   </Button>
-                  <Button onClick={shareTemplate}>
+                  <Button onClick={() => shareTemplate(currentTemplate)}>
                     <Share2 className="h-4 w-4 mr-2" />
                     Share
                   </Button>
@@ -189,3 +224,4 @@ export function TemplateCard({ template, onRandomize }: TemplateCardProps) {
     </Card>
   )
 }
+
