@@ -167,7 +167,7 @@ export function TemplateCard({ template, onRandomize }: TemplateCardProps) {
               Details
             </Button>
           </DialogTrigger>
-          <DialogContent className="sm:max-w-[600px]">
+          <DialogContent className="w-[95vw] max-w-[95vw] sm:max-w-[600px] p-4 sm:p-6 overflow-y-auto max-h-[90vh]">
             <DialogHeader>
               <DialogTitle>{currentTemplate.name}</DialogTitle>
               <DialogDescription>
@@ -182,13 +182,13 @@ export function TemplateCard({ template, onRandomize }: TemplateCardProps) {
                 style={{ backgroundImage: `url(${currentTemplate.previewUrl})` }}
               />
 
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {currentTemplate.colors.map((color, index) => (
                   <div key={index} className="flex items-center gap-2">
                     <div className="w-8 h-8 rounded-full border" style={{ backgroundColor: color.value }} />
-                    <div className="flex-1">
-                      <div className="font-medium">{color.name}</div>
-                      <div className="text-sm text-muted-foreground font-mono">{color.value}</div>
+                    <div className="flex-1 min-w-0">
+                      <div className="font-medium truncate">{color.name}</div>
+                      <div className="text-sm text-muted-foreground font-mono truncate">{color.value}</div>
                     </div>
                     <Button variant="ghost" size="icon" onClick={() => copyColor(color.value)}>
                       <Copy className="h-4 w-4" />
@@ -197,23 +197,34 @@ export function TemplateCard({ template, onRandomize }: TemplateCardProps) {
                 ))}
               </div>
 
-              <div className="flex justify-between">
-                <Button variant="outline" onClick={handleRandomize}>
+              <div className="flex flex-col sm:flex-row sm:justify-between gap-3">
+                <Button variant="outline" onClick={handleRandomize} className="w-full sm:w-auto">
                   <RefreshCw className="h-4 w-4 mr-2" />
                   Randomize Colors
                 </Button>
-                <div className="flex gap-2">
-                  <Button variant="outline" onClick={() => copyAllColors(currentTemplate)}>
+                <div className="flex flex-wrap gap-2 justify-end">
+                  <Button
+                    variant="outline"
+                    onClick={() => copyAllColors(currentTemplate)}
+                    className="flex-1 sm:flex-none"
+                  >
                     <Copy className="h-4 w-4 mr-2" />
-                    Copy All
+                    <span className="hidden sm:inline">Copy All</span>
+                    <span className="sm:hidden">Copy</span>
                   </Button>
-                  <Button variant="outline" onClick={() => exportTemplate(currentTemplate)}>
+                  <Button
+                    variant="outline"
+                    onClick={() => exportTemplate(currentTemplate)}
+                    className="flex-1 sm:flex-none"
+                  >
                     <Download className="h-4 w-4 mr-2" />
-                    Export
+                    <span className="hidden sm:inline">Export</span>
+                    <span className="sm:hidden">Export</span>
                   </Button>
-                  <Button onClick={() => shareTemplate(currentTemplate)}>
+                  <Button onClick={() => shareTemplate(currentTemplate)} className="flex-1 sm:flex-none">
                     <Share2 className="h-4 w-4 mr-2" />
-                    Share
+                    <span className="hidden sm:inline">Share</span>
+                    <span className="sm:hidden">Share</span>
                   </Button>
                 </div>
               </div>
